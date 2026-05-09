@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int          @id @default(autoincrement())
+  email        String       @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime     @default(now())
+  attendances  Attendance[]
+}
+
+model Assignment {
+  id        Int            @id @default(autoincrement())
+  name      String
+  code      String         @unique
+  type      AssignmentType
+  TimeEntry TimeEntry[]
+}
+
+enum AssignmentType {
+  WORK
+  VACATION
+  HOLIDAY
+}
+
+model Attendance {
+  id      Int         @id @default(autoincrement())
+  userId  Int
+  year    Int
+  month   Int
+  user    User        @relation(fields: [userId], references: [id])
+  entries TimeEntry[]
+
+  @@unique([userId, year, month])
+}
+
+model TimeEntry {
+  id            Int        @id @default(autoincrement())
+  attendanceId  Int
+  assignmentId  Int
+  date          DateTime
+  workedMinutes Int
+  attendance    Attendance @relation(fields: [attendanceId], references: [id])
+  assignment    Assignment @relation(fields: [assignmentId], references: [id])
+}

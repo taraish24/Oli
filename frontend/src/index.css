@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0f1117;
+  --card: #151820;
+  --border: #1e2433;
+  --cyan: #00d4ff;
+  --blue: #0066ff;
+  --green: #00c896;
+  --orange: #ff6b35;
+  --text: #e2e8f0;
+  --muted: #8892a4;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+#root {
+  min-height: 100vh;
+}
