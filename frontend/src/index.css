@@ -1,39 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
-
 :root {
-  --bg: #0a0f14;
-  --card: #0f1922;
-  --border: #1a2a35;
-  --cyan: #00d4ff;
-  --blue: #00d4ff;
+  --accent: #00ff88;
+  --cyan: #00ff88;
+  --text: #e8f4f8;
+  --muted: #4a7a8a;
+  --glass-bg: rgba(5, 12, 8, 0.35);
+  --glass-border: rgba(0, 255, 136, 0.12);
+  --radius: 4px;
+  --blue: #00ff88;
   --green: #00c896;
   --orange: #ff8a3d;
-  --text: #e6f0f7;
-  --muted: #7ea0b5;
-  --radius: 4px;
+  --border: rgba(0, 255, 136, 0.12);
+}
+
+html,
+body {
+  min-height: 100vh;
+  background-image: url('/bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
 }
 
 body {
   margin: 0;
-  background: var(--bg);
+  font-family: 'DM Sans', sans-serif;
   color: var(--text);
-  font-family: 'DM Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 5, 8, 0.25);
+  z-index: 0;
+  pointer-events: none;
 }
 
 #root {
+  position: relative;
+  z-index: 1;
   min-height: 100vh;
+  background: transparent;
 }
 
 * {
   box-sizing: border-box;
 }
 
+/* Frosted glass: sidebar, main cards, right shell, login, stat cards */
+.glass {
+  background: rgba(5, 12, 10, 0.45);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 255, 136, 0.12);
+  border-radius: 4px;
+}
+
+/* Calendar day cells — gradient shows through; no frosted fill */
+.calendar-day-cell {
+  background: transparent;
+  border: 1px solid rgba(0, 255, 136, 0.08);
+  border-radius: 4px;
+}
+
+/* Inputs on glass — lighter tint */
+.glass-field {
+  background: rgba(5, 12, 8, 0.28);
+  border: 1px solid rgba(0, 255, 136, 0.12);
+  border-radius: 4px;
+  color: var(--text);
+}
+
+/* Nested outline on glass (no second frost layer) */
+.glass-outline {
+  background: transparent;
+  border: 1px solid rgba(0, 255, 136, 0.08);
+  border-radius: 4px;
+}
+
+@keyframes borderGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.15);
+  }
+
+  50% {
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+  }
+}
+
 ::selection {
-  background: rgba(0, 212, 255, 0.22);
+  background: rgba(0, 255, 136, 0.22);
 }
 
 input,
@@ -45,6 +109,6 @@ button {
 button:focus-visible,
 input:focus-visible,
 select:focus-visible {
-  outline: 2px solid rgba(0, 212, 255, 0.6);
+  outline: 2px solid rgba(0, 255, 136, 0.5);
   outline-offset: 2px;
 }

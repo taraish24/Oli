@@ -50,29 +50,36 @@ function ProfilePage() {
       <AppSidebar />
       <section className="ml-[190px] min-h-screen px-6 py-5">
         <header className="mb-6 flex items-center justify-between">
-          <h2 className="text-2xl font-bold tracking-tight">Profile</h2>
+          <h2 className="text-2xl font-semibold tracking-tight" style={{ color: 'var(--text)' }}>
+            Profile
+          </h2>
         </header>
 
         <div className="max-w-xl space-y-4">
-          <div className="rounded-[4px] border p-4" style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'var(--border)' }}>
-            <p className="text-[11px] uppercase tracking-wider" style={{ color: 'var(--muted)' }}>
+          <div className="p-4 glass">
+            <p className="text-[11px] font-medium uppercase tracking-wider" style={{ color: 'var(--muted)' }}>
               Name
             </p>
-            <p className="mt-2 text-xl font-bold">{name}</p>
+            <p className="mt-2 text-xl font-semibold" style={{ color: 'var(--text)' }}>
+              {name}
+            </p>
           </div>
 
-          <div className="rounded-[4px] border p-4" style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'var(--border)' }}>
-            <p className="text-[11px] uppercase tracking-wider" style={{ color: 'var(--muted)' }}>
+          <div className="p-4 glass">
+            <p className="text-[11px] font-medium uppercase tracking-wider" style={{ color: 'var(--muted)' }}>
               Email
             </p>
-            <p className="mt-2 text-xl font-bold break-all">{email}</p>
+            <p className="mt-2 text-xl font-semibold break-all" style={{ color: 'var(--text)' }}>
+              {email}
+            </p>
           </div>
 
-          <div className="rounded-[4px] border p-4" style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'var(--border)' }}>
-            <h3 className="m-0 text-base font-semibold">Update name</h3>
+          <div className="p-4 glass">
+            <h3 className="m-0 text-base font-semibold" style={{ color: 'var(--text)' }}>
+              Update name
+            </h3>
             <input
-              className="mt-3 w-full rounded-[4px] border px-3 py-2 text-sm outline-none"
-              style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'var(--border)', color: 'var(--text)' }}
+              className="glass-field mt-3 w-full px-3 py-2 text-sm outline-none"
               value={draftName}
               onChange={(e) => setDraftName(e.target.value)}
               placeholder="Your name"
@@ -82,7 +89,7 @@ function ProfilePage() {
               disabled={isSaving}
               onClick={onSave}
               className="mt-3 w-full rounded-[4px] px-3 py-2 text-sm font-semibold disabled:opacity-60"
-              style={{ background: 'var(--cyan)', color: '#02131a' }}
+              style={{ background: 'var(--accent)', color: '#02131a' }}
             >
               {isSaving ? 'Saving…' : 'Save'}
             </button>

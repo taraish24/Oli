@@ -62,9 +62,14 @@ function CalendarPage() {
   const [editWorkedMinutes, setEditWorkedMinutes] = useState('')
   const [editError, setEditError] = useState('')
   const [isEditing, setIsEditing] = useState(false)
+  const [addEntryPanelOpen, setAddEntryPanelOpen] = useState(false)
 
   const month = monthIndex + 1
   const totalDays = new Date(year, monthIndex + 1, 0).getDate()
+
+  function closeAddEntryPanel() {
+    setAddEntryPanelOpen(false)
+  }
 
   async function refreshAttendance() {
     const response = await api.get(`/attendance/${year}/${month}`)
@@ -294,11 +299,10 @@ function CalendarPage() {
 
       <section className="ml-[190px] mr-[320px] min-h-screen px-6 py-5">
         <header className="mb-6 flex items-center justify-between">
-          <h2 className="text-2xl font-bold tracking-tight">Calendar</h2>
-          <div
-            className="flex items-center gap-3 rounded-[4px] border px-3 py-2"
-            style={{ borderColor: 'var(--border)', background: 'rgba(255,255,255,0.02)' }}
-          >
+          <h2 className="text-2xl font-semibold tracking-tight" style={{ color: 'var(--text)' }}>
+            Calendar
+          </h2>
+          <div className="flex items-center gap-3 px-3 py-2 glass">
             <button
               type="button"
               onClick={goToPrevMonth}
@@ -307,7 +311,7 @@ function CalendarPage() {
             >
               {'\u2039'}
             </button>
-            <span className="text-sm font-semibold" style={{ letterSpacing: '0.02em' }}>
+            <span className="text-sm font-semibold" style={{ letterSpacing: '0.02em', color: 'var(--text)' }}>
               {monthNames[monthIndex]} {year}
             </span>
             <button
@@ -323,20 +327,21 @@ function CalendarPage() {
 
         <div className="mb-6 grid grid-cols-4 gap-4">
           {stats.map((card) => (
-            <div
-              key={card.label}
-              className="rounded-[4px] border p-4"
-              style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'var(--border)' }}
-            >
-              <p className="text-[11px] uppercase tracking-wider" style={{ color: 'var(--muted)' }}>
+            <div key={card.label} className="p-4 glass">
+              <p className="text-[11px] font-medium uppercase tracking-wider" style={{ color: 'var(--muted)' }}>
                 {card.label}
               </p>
-              <p className="mt-2 text-3xl font-bold tracking-tight">{card.value}</p>
+              <p className="mt-2 text-3xl font-semibold tracking-tight" style={{ color: 'var(--text)' }}>
+                {card.value}
+              </p>
             </div>
           ))}
         </div>
 
-        <div className="grid grid-cols-7 gap-3 text-center text-sm" style={{ color: 'var(--muted)' }}>
+        <div
+          className="grid grid-cols-7 gap-3 text-center text-sm uppercase tracking-wide"
+          style={{ color: '#5a9a8a', fontWeight: 600 }}
+        >
           {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((name) => (
             <div key={name}>{name}</div>
           ))}
@@ -351,42 +356,59 @@ function CalendarPage() {
             const totalHours = entries.reduce((sum, current) => sum + current.minutes, 0) / 60
             const clickable = !isFuture
 
+            const todayGlow = isToday
+              ? {
+                  border: '1px solid var(--accent)',
+                  boxShadow: '0 0 10px rgba(0, 255, 136, 0.35)',
+                }
+              : {}
+            const selectedBorder =
+              isSelected && !isToday
+                ? { border: '1px solid rgba(0, 255, 136, 0.55)', boxShadow: 'none' }
+                : !isToday
+                  ? { border: '1px solid rgba(0, 255, 136, 0.08)', boxShadow: 'none' }
+                  : {}
+
             return (
               <button
                 type="button"
                 key={item.day}
                 disabled={!clickable}
                 onClick={() => clickable && setSelectedDay(item.day)}
-                className="h-32 rounded-[4px] border p-3 text-left transition"
+                className="calendar-day-cell h-32 p-3 text-left transition"
                 style={{
-                  background: isToday ? 'rgba(0, 212, 255, 0.06)' : 'rgba(255,255,255,0.02)',
-                  borderColor:
-                    isToday
-                      ? 'var(--cyan)'
-                      : isSelected
-                        ? 'var(--blue)'
-                        : 'var(--border)',
-                  boxShadow: 'none',
+                  background: 'transparent',
+                  ...todayGlow,
+                  ...(!isToday ? selectedBorder : {}),
                   opacity: isFuture ? 0.35 : 1,
                   cursor: clickable ? 'pointer' : 'not-allowed',
                 }}
               >
-                <p className="m-0 text-sm font-semibold tabular-nums">{item.day}</p>
+                <p className="m-0 text-sm tabular-nums" style={{ color: '#e8f4f8', fontWeight: 600 }}>
+                  {item.day}
+                </p>
                 {isFuture ? (
-                  <p className="mt-3 text-xs uppercase tracking-wide" style={{ color: 'var(--muted)' }}>
-                    locked
+                  <p
+                    className="mt-3 text-xs uppercase tracking-wide"
+                    style={{ color: 'rgba(120, 180, 160, 0.6)', fontWeight: 500 }}
+                  >
+                    LOCKED
                   </p>
                 ) : (
                   <>
-                    <p className="mt-3 text-xs" style={{ color: 'var(--muted)' }}>
-                      {totalHours.toFixed(1)}h tracked
+                    <p className="mt-3 text-xs font-medium" style={{ color: '#7ab8c8' }}>
+                      {totalHours.toFixed(1)}h
                     </p>
                     <div className="mt-2 flex flex-wrap gap-1">
                       {entries.slice(0, 2).map((entry) => (
                         <span
                           key={entry.title}
                           className="rounded-[4px] px-2 py-0.5 text-[11px] font-semibold"
-                          style={{ background: 'rgba(0, 212, 255, 0.10)', color: 'var(--cyan)', border: '1px solid rgba(0, 212, 255, 0.14)' }}
+                          style={{
+                            background: 'rgba(5, 12, 8, 0.35)',
+                            color: 'var(--accent)',
+                            border: '1px solid rgba(0, 255, 136, 0.2)',
+                          }}
                         >
                           {entry.tag}
                         </span>
@@ -401,33 +423,35 @@ function CalendarPage() {
       </section>
 
       <aside
-        className="fixed right-0 top-0 h-screen w-[320px] border-l px-5 py-5"
-        style={{ background: 'rgba(15, 25, 34, 0.65)', borderColor: 'var(--border)', backdropFilter: 'blur(10px)' }}
+        className="fixed right-0 top-0 flex h-screen w-[320px] flex-col overflow-hidden px-5 py-5 glass"
+        style={{ borderRadius: '4px 0 0 4px' }}
       >
-        <h3 className="text-xl font-bold tracking-tight">Day {selectedDay}</h3>
-        <p className="text-sm" style={{ color: 'var(--muted)' }}>
-          Selected day entries
-        </p>
+        <div className="shrink-0">
+          <h3 className="text-xl font-semibold tracking-tight" style={{ color: 'var(--text)' }}>
+            Day {selectedDay}
+          </h3>
+          <p className="text-sm font-light" style={{ color: 'var(--muted)' }}>
+            Selected day entries
+          </p>
+        </div>
 
-        <div className="mt-4 space-y-3">
+        <div
+          className="mt-4 space-y-3 pr-1"
+          style={{ maxHeight: '40vh', overflowY: 'auto' }}
+        >
           {selectedEntries.length === 0 ? (
-            <div className="rounded-lg border p-3 text-sm" style={{ borderColor: 'var(--border)' }}>
+            <div className="glass-outline p-3 text-sm" style={{ color: 'var(--muted)' }}>
               No entries yet.
             </div>
           ) : (
             selectedEntries.map((entry) => (
-              <div
-                key={entry.id}
-                className="rounded-[4px] border p-3"
-                style={{ borderColor: 'var(--border)', background: 'rgba(255,255,255,0.02)' }}
-              >
+              <div key={entry.id} className="glass-outline p-3">
                 {editingEntryId === entry.id ? (
                   <>
                     <select
-                      className="w-full rounded-[4px] border px-3 py-2 text-sm outline-none"
+                      className="glass-field w-full px-3 py-2 text-sm outline-none"
                       value={editAssignmentId}
                       onChange={(e) => setEditAssignmentId(e.target.value)}
-                      style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'var(--border)', color: 'var(--text)' }}
                     >
                       {assignments.map((assignment) => (
                         <option key={assignment.id} value={String(assignment.id)}>
@@ -437,8 +461,7 @@ function CalendarPage() {
                     </select>
                     <input
                       type="number"
-                      className="mt-2 w-full rounded-[4px] border px-3 py-2 text-sm outline-none"
-                      style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'var(--border)', color: 'var(--text)' }}
+                      className="glass-field mt-2 w-full px-3 py-2 text-sm outline-none"
                       value={editWorkedMinutes}
                       onChange={(e) => setEditWorkedMinutes(e.target.value)}
                     />
@@ -455,7 +478,7 @@ function CalendarPage() {
                         disabled={isEditing}
                         onClick={() => onSaveEdit(entry.id)}
                         className="flex-1 rounded-[4px] px-3 py-2 text-sm font-semibold disabled:opacity-60"
-                        style={{ background: 'var(--cyan)', color: '#02131a' }}
+                        style={{ background: 'var(--accent)', color: '#02131a' }}
                       >
                         {isEditing ? 'Saving…' : 'Save'}
                       </button>
@@ -463,8 +486,8 @@ function CalendarPage() {
                         type="button"
                         disabled={isEditing}
                         onClick={cancelEdit}
-                        className="flex-1 rounded-[4px] border px-3 py-2 text-sm font-semibold disabled:opacity-60"
-                        style={{ borderColor: 'var(--border)', background: 'transparent', color: 'var(--text)' }}
+                        className="glass-field flex-1 rounded-[4px] px-3 py-2 text-sm font-semibold disabled:opacity-60"
+                        style={{ color: 'var(--text)' }}
                       >
                         Cancel
                       </button>
@@ -472,13 +495,19 @@ function CalendarPage() {
                   </>
                 ) : (
                   <>
-                    <p className="m-0 font-semibold">{entry.title}</p>
-                    <p className="m-0 mt-1 text-sm" style={{ color: 'var(--muted)' }}>
+                    <p className="m-0 font-semibold" style={{ color: 'var(--text)' }}>
+                      {entry.title}
+                    </p>
+                    <p className="m-0 mt-1 text-sm font-light" style={{ color: 'var(--muted)' }}>
                       {entry.minutes} min ({(entry.minutes / 60).toFixed(1)}h)
                     </p>
                     <span
                       className="mt-2 inline-block rounded-[4px] px-2 py-1 text-xs font-semibold"
-                      style={{ background: 'rgba(0, 212, 255, 0.10)', color: 'var(--cyan)', border: '1px solid rgba(0, 212, 255, 0.14)' }}
+                      style={{
+                        background: 'rgba(5, 12, 8, 0.35)',
+                        color: 'var(--accent)',
+                        border: '1px solid rgba(0, 255, 136, 0.2)',
+                      }}
                     >
                       {entry.tag}
                     </span>
@@ -487,8 +516,8 @@ function CalendarPage() {
                       <button
                         type="button"
                         onClick={() => startEdit(entry)}
-                        className="flex-1 rounded-[4px] border px-3 py-2 text-xs font-semibold"
-                        style={{ borderColor: 'var(--border)', background: 'transparent', color: 'var(--text)' }}
+                        className="glass-field flex-1 rounded-[4px] px-3 py-2 text-xs font-semibold"
+                        style={{ color: 'var(--text)' }}
                       >
                         Edit
                       </button>
@@ -496,7 +525,7 @@ function CalendarPage() {
                         type="button"
                         onClick={() => onDeleteEntry(entry.id)}
                         className="flex-1 rounded-[4px] border px-3 py-2 text-xs font-semibold"
-                        style={{ borderColor: 'rgba(255, 107, 107, 0.55)', background: 'transparent', color: '#ff6b6b' }}
+                        style={{ borderColor: 'rgba(255, 107, 107, 0.45)', background: 'transparent', color: '#ff6b6b' }}
                       >
                         Delete
                       </button>
@@ -508,43 +537,81 @@ function CalendarPage() {
           )}
         </div>
 
-        <div className="mt-6 rounded-[4px] border p-4" style={{ borderColor: 'var(--border)', background: 'rgba(255,255,255,0.02)' }}>
-          <h4 className="m-0 text-base font-semibold">Add Entry</h4>
-          <select
-            className="mt-3 w-full rounded-[4px] border px-3 py-2 text-sm outline-none"
-            value={selectedAssignmentId}
-            onChange={(e) => setSelectedAssignmentId(e.target.value)}
-            style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'var(--border)', color: 'var(--text)' }}
-          >
-            {assignments.map((assignment) => (
-              <option key={assignment.id} value={String(assignment.id)}>
-                {assignment.name} ({assignment.type})
-              </option>
-            ))}
-          </select>
-          <input
-            type="number"
-            className="mt-2 w-full rounded-[4px] border px-3 py-2 text-sm outline-none"
-            placeholder="e.g. 480 = 8h"
-            style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'var(--border)', color: 'var(--text)' }}
-            value={workedMinutes}
-            onChange={(e) => setWorkedMinutes(e.target.value)}
-          />
-          <button
-            type="button"
-            disabled={isSaving}
-            onClick={onSaveEntry}
-            className="mt-3 w-full rounded-[4px] px-3 py-2 text-sm font-semibold"
-            style={{ background: 'var(--cyan)', color: '#02131a', opacity: isSaving ? 0.7 : 1 }}
-          >
-            {isSaving ? 'Saving…' : 'Save Entry'}
-          </button>
+        <div className="mt-3 w-full shrink-0 space-y-3">
+          {addEntryPanelOpen ? (
+            <div className="p-4 glass">
+              <div className="mb-4 flex items-center justify-between gap-2">
+                <h4 className="m-0 text-base font-semibold" style={{ color: 'var(--text)' }}>
+                  Add Entry
+                </h4>
+                <button
+                  type="button"
+                  onClick={closeAddEntryPanel}
+                  className="glass-field shrink-0 rounded-[4px] px-3 py-1.5 text-xs font-semibold"
+                  style={{ color: 'var(--muted)' }}
+                >
+                  Cancel
+                </button>
+              </div>
 
-          {saveError ? (
-            <p className="mt-3 text-sm" style={{ color: '#ff6b6b' }}>
-              {saveError}
-            </p>
-          ) : null}
+              <select
+                value={selectedAssignmentId}
+                onChange={(e) => setSelectedAssignmentId(e.target.value)}
+                disabled={assignments.length === 0}
+                style={{
+                  width: '100%',
+                  background: '#0a1a12',
+                  color: '#e8f4f8',
+                  border: '1px solid rgba(0, 255, 136, 0.2)',
+                  borderRadius: '4px',
+                  padding: '8px 12px',
+                  outline: 'none',
+                  cursor: assignments.length === 0 ? 'not-allowed' : 'pointer',
+                  fontSize: '14px',
+                  opacity: assignments.length === 0 ? 0.5 : 1,
+                }}
+              >
+                {assignments.map((a) => (
+                  <option key={a.id} value={String(a.id)} style={{ background: '#0a1a12' }}>
+                    {a.name} ({a.type})
+                  </option>
+                ))}
+              </select>
+
+              <input
+                type="number"
+                className="glass-field mt-2 w-full px-3 py-2 text-sm outline-none"
+                placeholder="e.g. 480 = 8h"
+                value={workedMinutes}
+                onChange={(e) => setWorkedMinutes(e.target.value)}
+              />
+
+              <button
+                type="button"
+                disabled={isSaving}
+                onClick={onSaveEntry}
+                className="mt-3 w-full rounded-[4px] px-3 py-2 text-sm font-semibold"
+                style={{ background: 'var(--accent)', color: '#02131a', opacity: isSaving ? 0.7 : 1 }}
+              >
+                {isSaving ? 'Saving…' : 'Save Entry'}
+              </button>
+
+              {saveError ? (
+                <p className="mt-3 text-sm" style={{ color: '#ff6b6b' }}>
+                  {saveError}
+                </p>
+              ) : null}
+            </div>
+          ) : (
+            <button
+              type="button"
+              className="w-full rounded-[4px] px-3 py-3 text-sm font-semibold glass-field"
+              style={{ color: 'var(--text)' }}
+              onClick={() => setAddEntryPanelOpen(true)}
+            >
+              + Add Entry
+            </button>
+          )}
         </div>
       </aside>
     </main>
