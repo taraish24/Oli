@@ -1,12 +1,22 @@
 const express = require('express')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const rateLimit = require('express-rate-limit')
 const prisma = require('../prisma')
 const authMiddleware = require('../middleware/auth')
 
 const router = express.Router()
 
-router.post('/login', async (req, res) => {
+/** Brute-force protection: 10 attempts per IP per 15 minutes (only on login). */
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many login attempts. Try again in 15 minutes.' },
+})
+
+router.post('/login', loginLimiter, async (req, res) => {
   try {
     if (!process.env.JWT_SECRET) {
       return res.status(500).json({ error: 'Server misconfigured' })
@@ -28,10 +38,12 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' })
     }
 
+    // Shorter lived than 7d: limits window if token is stolen. Tradeoff: users re-login daily;
+    // refresh tokens would improve UX without extending bearer lifetime in storage.
     const token = jwt.sign(
       { id: user.id, email: user.email },
       process.env.JWT_SECRET,
-      { expiresIn: '7d' },
+      { expiresIn: process.env.JWT_EXPIRES_IN || '24h' },
     )
 
     return res.json({
