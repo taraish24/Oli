@@ -135,17 +135,17 @@ function AnalyticsPage() {
   return (
     <main className="min-h-screen">
       <AppSidebar />
-      <section className="ml-[220px] min-h-screen p-6">
+      <section className="ml-[190px] min-h-screen px-6 py-5">
         <header className="mb-6 flex items-center justify-between">
-          <h2 className="text-2xl font-bold">Analytics</h2>
+          <h2 className="text-2xl font-bold tracking-tight">Analytics</h2>
           <div
-            className="flex items-center gap-3 rounded-lg border px-4 py-2"
-            style={{ borderColor: 'var(--border)', background: 'var(--card)' }}
+            className="flex items-center gap-3 rounded-[4px] border px-3 py-2"
+            style={{ borderColor: 'var(--border)', background: 'rgba(255,255,255,0.02)' }}
           >
             <button type="button" onClick={goToPrevMonth} className="text-lg" style={{ color: 'var(--text)' }}>
               {'\u2039'}
             </button>
-            <span className="text-lg">
+            <span className="text-sm font-semibold" style={{ letterSpacing: '0.02em' }}>
               {monthNames[monthIndex]} {year}
             </span>
             <button type="button" onClick={goToNextMonth} className="text-lg" style={{ color: 'var(--text)' }}>
@@ -155,7 +155,7 @@ function AnalyticsPage() {
         </header>
 
         {error ? (
-          <div className="mb-6 rounded-xl border p-4" style={{ borderColor: 'rgba(255, 107, 107, 0.55)' }}>
+          <div className="mb-6 rounded-[4px] border p-4" style={{ borderColor: 'rgba(255, 107, 107, 0.55)' }}>
             <p className="m-0 text-sm font-semibold" style={{ color: '#ff6b6b' }}>
               {error}
             </p>
@@ -163,20 +163,20 @@ function AnalyticsPage() {
         ) : null}
 
         <div className="grid grid-cols-2 gap-4">
-          <div className="rounded-xl border p-4" style={{ background: 'var(--card)', borderColor: 'var(--border)' }}>
-            <p className="text-xs uppercase tracking-wide" style={{ color: 'var(--muted)' }}>
+          <div className="rounded-[4px] border p-4" style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'var(--border)' }}>
+            <p className="text-[11px] uppercase tracking-wider" style={{ color: 'var(--muted)' }}>
               Total hours tracked
             </p>
-            <p className="mt-2 text-3xl font-bold">
+            <p className="mt-2 text-4xl font-bold tracking-tight">
               {isLoading ? '—' : formatHours(computed.totalMinutes)}
             </p>
           </div>
 
-          <div className="rounded-xl border p-4" style={{ background: 'var(--card)', borderColor: 'var(--border)' }}>
-            <p className="text-xs uppercase tracking-wide" style={{ color: 'var(--muted)' }}>
+          <div className="rounded-[4px] border p-4" style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'var(--border)' }}>
+            <p className="text-[11px] uppercase tracking-wider" style={{ color: 'var(--muted)' }}>
               Days with entries
             </p>
-            <p className="mt-2 text-3xl font-bold">
+            <p className="mt-2 text-4xl font-bold tracking-tight">
               {isLoading ? '—' : `${computed.daysWithEntriesCount} / ${computed.workingDaysTotal}`}
             </p>
             <p className="mt-1 text-xs" style={{ color: 'var(--muted)' }}>
@@ -186,7 +186,7 @@ function AnalyticsPage() {
         </div>
 
         <div className="mt-6 grid grid-cols-2 gap-4">
-          <div className="rounded-xl border p-4" style={{ background: 'var(--card)', borderColor: 'var(--border)' }}>
+          <div className="rounded-[4px] border p-4" style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'var(--border)' }}>
             <h3 className="m-0 text-base font-semibold">Breakdown by type</h3>
             <div className="mt-4 space-y-3">
               {computed.typeItems.map((item) => {
@@ -197,9 +197,9 @@ function AnalyticsPage() {
                       <span className="font-semibold">{item.type}</span>
                       <span style={{ color: 'var(--muted)' }}>{isLoading ? '—' : formatHours(item.minutes)}</span>
                     </div>
-                    <div className="mt-2 h-2 w-full rounded-full" style={{ background: 'rgba(255,255,255,0.08)' }}>
+                    <div className="mt-2 h-2 w-full rounded-[4px]" style={{ background: 'rgba(255,255,255,0.06)' }}>
                       <div
-                        className="h-2 rounded-full"
+                        className="h-2 rounded-[4px]"
                         style={{ width: `${pct}%`, background: item.color }}
                       />
                     </div>
@@ -209,7 +209,7 @@ function AnalyticsPage() {
             </div>
           </div>
 
-          <div className="rounded-xl border p-4" style={{ background: 'var(--card)', borderColor: 'var(--border)' }}>
+          <div className="rounded-[4px] border p-4" style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'var(--border)' }}>
             <h3 className="m-0 text-base font-semibold">Most used assignment</h3>
             <div className="mt-4">
               {isLoading ? (

@@ -8,12 +8,17 @@ const router = express.Router()
 
 router.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body
-    if (!email || !password) {
+    if (!process.env.JWT_SECRET) {
+      return res.status(500).json({ error: 'Server misconfigured' })
+    }
+
+    const email = req.body?.email
+    const password = req.body?.password
+    if (typeof email !== 'string' || typeof password !== 'string' || !email.trim() || !password) {
       return res.status(400).json({ error: 'Email and password are required' })
     }
 
-    const user = await prisma.user.findUnique({ where: { email } })
+    const user = await prisma.user.findUnique({ where: { email: email.trim() } })
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' })
     }

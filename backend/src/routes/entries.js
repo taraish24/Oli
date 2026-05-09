@@ -4,6 +4,15 @@ const authMiddleware = require('../middleware/auth')
 
 const router = express.Router()
 
+function toInt(value) {
+  if (typeof value === 'number') return Number.isInteger(value) ? value : null
+  if (typeof value === 'string' && value.trim() !== '') {
+    const n = Number(value)
+    return Number.isInteger(n) ? n : null
+  }
+  return null
+}
+
 function getYearMonthFromDate(inputDate) {
   const date = new Date(inputDate)
   if (Number.isNaN(date.getTime())) return null
@@ -54,10 +63,23 @@ router.use(authMiddleware)
 
 router.post('/', async (req, res) => {
   try {
-    const attendanceId = Number(req.body.attendanceId)
-    const assignmentId = Number(req.body.assignmentId)
-    const workedMinutes = Number(req.body.workedMinutes)
-    const { date } = req.body
+    const attendanceId = toInt(req.body?.attendanceId)
+    const assignmentId = toInt(req.body?.assignmentId)
+    const workedMinutes = toInt(req.body?.workedMinutes)
+    const date = req.body?.date
+
+    if (!attendanceId || attendanceId < 1) {
+      return res.status(400).json({ error: 'attendanceId is required' })
+    }
+    if (!assignmentId || assignmentId < 1) {
+      return res.status(400).json({ error: 'assignmentId is required' })
+    }
+    if (workedMinutes == null) {
+      return res.status(400).json({ error: 'workedMinutes is required' })
+    }
+    if (!date) {
+      return res.status(400).json({ error: 'date is required' })
+    }
 
     const attendance = await prisma.attendance.findUnique({ where: { id: attendanceId } })
     if (!attendance || attendance.userId !== req.user.id) {
@@ -92,7 +114,11 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   try {
-    const id = Number(req.params.id)
+    const id = toInt(req.params.id)
+    if (!id || id < 1) {
+      return res.status(400).json({ error: 'Invalid entry id' })
+    }
+
     const existingEntry = await prisma.timeEntry.findUnique({
       where: { id },
       include: { attendance: true },
@@ -101,10 +127,25 @@ router.put('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Entry not found' })
     }
 
-    const attendanceId = Number(req.body.attendanceId ?? existingEntry.attendanceId)
-    const assignmentId = Number(req.body.assignmentId ?? existingEntry.assignmentId)
-    const workedMinutes = Number(req.body.workedMinutes ?? existingEntry.workedMinutes)
-    const date = req.body.date ?? existingEntry.date
+    const attendanceIdRaw = req.body?.attendanceId
+    const assignmentIdRaw = req.body?.assignmentId
+    const workedMinutesRaw = req.body?.workedMinutes
+    const dateRaw = req.body?.date
+
+    const attendanceId = attendanceIdRaw == null ? existingEntry.attendanceId : toInt(attendanceIdRaw)
+    const assignmentId = assignmentIdRaw == null ? existingEntry.assignmentId : toInt(assignmentIdRaw)
+    const workedMinutes = workedMinutesRaw == null ? existingEntry.workedMinutes : toInt(workedMinutesRaw)
+    const date = dateRaw == null ? existingEntry.date : dateRaw
+
+    if (!attendanceId || attendanceId < 1) {
+      return res.status(400).json({ error: 'attendanceId must be a positive integer' })
+    }
+    if (!assignmentId || assignmentId < 1) {
+      return res.status(400).json({ error: 'assignmentId must be a positive integer' })
+    }
+    if (workedMinutes == null) {
+      return res.status(400).json({ error: 'workedMinutes must be an integer' })
+    }
 
     if (attendanceId !== existingEntry.attendanceId) {
       const attendance = await prisma.attendance.findUnique({ where: { id: attendanceId } })
@@ -143,7 +184,11 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   try {
-    const id = Number(req.params.id)
+    const id = toInt(req.params.id)
+    if (!id || id < 1) {
+      return res.status(400).json({ error: 'Invalid entry id' })
+    }
+
     const existingEntry = await prisma.timeEntry.findUnique({
       where: { id },
       include: { attendance: true },

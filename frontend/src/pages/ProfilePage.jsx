@@ -48,31 +48,31 @@ function ProfilePage() {
   return (
     <main className="min-h-screen">
       <AppSidebar />
-      <section className="ml-[220px] min-h-screen p-6">
+      <section className="ml-[190px] min-h-screen px-6 py-5">
         <header className="mb-6 flex items-center justify-between">
-          <h2 className="text-2xl font-bold">Profile</h2>
+          <h2 className="text-2xl font-bold tracking-tight">Profile</h2>
         </header>
 
         <div className="max-w-xl space-y-4">
-          <div className="rounded-xl border p-4" style={{ background: 'var(--card)', borderColor: 'var(--border)' }}>
-            <p className="text-xs uppercase tracking-wide" style={{ color: 'var(--muted)' }}>
+          <div className="rounded-[4px] border p-4" style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'var(--border)' }}>
+            <p className="text-[11px] uppercase tracking-wider" style={{ color: 'var(--muted)' }}>
               Name
             </p>
             <p className="mt-2 text-xl font-bold">{name}</p>
           </div>
 
-          <div className="rounded-xl border p-4" style={{ background: 'var(--card)', borderColor: 'var(--border)' }}>
-            <p className="text-xs uppercase tracking-wide" style={{ color: 'var(--muted)' }}>
+          <div className="rounded-[4px] border p-4" style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'var(--border)' }}>
+            <p className="text-[11px] uppercase tracking-wider" style={{ color: 'var(--muted)' }}>
               Email
             </p>
             <p className="mt-2 text-xl font-bold break-all">{email}</p>
           </div>
 
-          <div className="rounded-xl border p-4" style={{ background: 'var(--card)', borderColor: 'var(--border)' }}>
+          <div className="rounded-[4px] border p-4" style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'var(--border)' }}>
             <h3 className="m-0 text-base font-semibold">Update name</h3>
             <input
-              className="mt-3 w-full rounded-md border px-3 py-2 text-sm outline-none"
-              style={{ background: '#0f1522', borderColor: 'var(--border)', color: 'var(--text)' }}
+              className="mt-3 w-full rounded-[4px] border px-3 py-2 text-sm outline-none"
+              style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'var(--border)', color: 'var(--text)' }}
               value={draftName}
               onChange={(e) => setDraftName(e.target.value)}
               placeholder="Your name"
@@ -81,7 +81,7 @@ function ProfilePage() {
               type="button"
               disabled={isSaving}
               onClick={onSave}
-              className="mt-3 w-full rounded-md px-3 py-2 text-sm font-semibold disabled:opacity-60"
+              className="mt-3 w-full rounded-[4px] px-3 py-2 text-sm font-semibold disabled:opacity-60"
               style={{ background: 'var(--cyan)', color: '#02131a' }}
             >
               {isSaving ? 'Saving…' : 'Save'}

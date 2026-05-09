@@ -292,20 +292,30 @@ function CalendarPage() {
     <main className="min-h-screen">
       <AppSidebar />
 
-      <section className="ml-[220px] mr-[300px] min-h-screen p-6">
+      <section className="ml-[190px] mr-[320px] min-h-screen px-6 py-5">
         <header className="mb-6 flex items-center justify-between">
-          <h2 className="text-2xl font-bold">Calendar</h2>
+          <h2 className="text-2xl font-bold tracking-tight">Calendar</h2>
           <div
-            className="flex items-center gap-3 rounded-lg border px-4 py-2"
-            style={{ borderColor: 'var(--border)', background: 'var(--card)' }}
+            className="flex items-center gap-3 rounded-[4px] border px-3 py-2"
+            style={{ borderColor: 'var(--border)', background: 'rgba(255,255,255,0.02)' }}
           >
-            <button type="button" onClick={goToPrevMonth} className="text-lg" style={{ color: 'var(--text)' }}>
+            <button
+              type="button"
+              onClick={goToPrevMonth}
+              className="text-lg leading-none"
+              style={{ color: 'var(--text)' }}
+            >
               {'\u2039'}
             </button>
-            <span className="text-lg">
+            <span className="text-sm font-semibold" style={{ letterSpacing: '0.02em' }}>
               {monthNames[monthIndex]} {year}
             </span>
-            <button type="button" onClick={goToNextMonth} className="text-lg" style={{ color: 'var(--text)' }}>
+            <button
+              type="button"
+              onClick={goToNextMonth}
+              className="text-lg leading-none"
+              style={{ color: 'var(--text)' }}
+            >
               {'\u203a'}
             </button>
           </div>
@@ -315,13 +325,13 @@ function CalendarPage() {
           {stats.map((card) => (
             <div
               key={card.label}
-              className="rounded-xl border p-4"
-              style={{ background: 'var(--card)', borderColor: 'var(--border)' }}
+              className="rounded-[4px] border p-4"
+              style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'var(--border)' }}
             >
-              <p className="text-xs uppercase tracking-wide" style={{ color: 'var(--muted)' }}>
+              <p className="text-[11px] uppercase tracking-wider" style={{ color: 'var(--muted)' }}>
                 {card.label}
               </p>
-              <p className="mt-2 text-2xl font-bold">{card.value}</p>
+              <p className="mt-2 text-3xl font-bold tracking-tight">{card.value}</p>
             </div>
           ))}
         </div>
@@ -347,21 +357,21 @@ function CalendarPage() {
                 key={item.day}
                 disabled={!clickable}
                 onClick={() => clickable && setSelectedDay(item.day)}
-                className="h-28 rounded-xl border p-3 text-left transition"
+                className="h-32 rounded-[4px] border p-3 text-left transition"
                 style={{
-                  background: isToday ? 'rgba(0, 212, 255, 0.08)' : 'var(--card)',
+                  background: isToday ? 'rgba(0, 212, 255, 0.06)' : 'rgba(255,255,255,0.02)',
                   borderColor:
                     isToday
                       ? 'var(--cyan)'
                       : isSelected
                         ? 'var(--blue)'
                         : 'var(--border)',
-                  boxShadow: isToday ? '0 0 0 1px rgba(0, 212, 255, 0.25), 0 0 24px rgba(0, 212, 255, 0.16)' : 'none',
+                  boxShadow: 'none',
                   opacity: isFuture ? 0.35 : 1,
                   cursor: clickable ? 'pointer' : 'not-allowed',
                 }}
               >
-                <p className="m-0 text-sm font-semibold">{item.day}</p>
+                <p className="m-0 text-sm font-semibold tabular-nums">{item.day}</p>
                 {isFuture ? (
                   <p className="mt-3 text-xs uppercase tracking-wide" style={{ color: 'var(--muted)' }}>
                     locked
@@ -375,8 +385,8 @@ function CalendarPage() {
                       {entries.slice(0, 2).map((entry) => (
                         <span
                           key={entry.title}
-                          className="rounded px-2 py-0.5 text-[11px] font-medium"
-                          style={{ background: entry.color, color: '#02131a' }}
+                          className="rounded-[4px] px-2 py-0.5 text-[11px] font-semibold"
+                          style={{ background: 'rgba(0, 212, 255, 0.10)', color: 'var(--cyan)', border: '1px solid rgba(0, 212, 255, 0.14)' }}
                         >
                           {entry.tag}
                         </span>
@@ -391,10 +401,10 @@ function CalendarPage() {
       </section>
 
       <aside
-        className="fixed right-0 top-0 h-screen w-[300px] border-l p-5"
-        style={{ background: 'var(--card)', borderColor: 'var(--border)' }}
+        className="fixed right-0 top-0 h-screen w-[320px] border-l px-5 py-5"
+        style={{ background: 'rgba(15, 25, 34, 0.65)', borderColor: 'var(--border)', backdropFilter: 'blur(10px)' }}
       >
-        <h3 className="text-xl font-bold">Day {selectedDay}</h3>
+        <h3 className="text-xl font-bold tracking-tight">Day {selectedDay}</h3>
         <p className="text-sm" style={{ color: 'var(--muted)' }}>
           Selected day entries
         </p>
@@ -406,14 +416,18 @@ function CalendarPage() {
             </div>
           ) : (
             selectedEntries.map((entry) => (
-              <div key={entry.id} className="rounded-lg border p-3" style={{ borderColor: 'var(--border)' }}>
+              <div
+                key={entry.id}
+                className="rounded-[4px] border p-3"
+                style={{ borderColor: 'var(--border)', background: 'rgba(255,255,255,0.02)' }}
+              >
                 {editingEntryId === entry.id ? (
                   <>
                     <select
-                      className="w-full rounded-md border px-3 py-2 text-sm outline-none"
+                      className="w-full rounded-[4px] border px-3 py-2 text-sm outline-none"
                       value={editAssignmentId}
                       onChange={(e) => setEditAssignmentId(e.target.value)}
-                      style={{ background: '#0f1522', borderColor: 'var(--border)', color: 'var(--text)' }}
+                      style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'var(--border)', color: 'var(--text)' }}
                     >
                       {assignments.map((assignment) => (
                         <option key={assignment.id} value={String(assignment.id)}>
@@ -423,8 +437,8 @@ function CalendarPage() {
                     </select>
                     <input
                       type="number"
-                      className="mt-2 w-full rounded-md border px-3 py-2 text-sm outline-none"
-                      style={{ background: '#0f1522', borderColor: 'var(--border)', color: 'var(--text)' }}
+                      className="mt-2 w-full rounded-[4px] border px-3 py-2 text-sm outline-none"
+                      style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'var(--border)', color: 'var(--text)' }}
                       value={editWorkedMinutes}
                       onChange={(e) => setEditWorkedMinutes(e.target.value)}
                     />
@@ -440,7 +454,7 @@ function CalendarPage() {
                         type="button"
                         disabled={isEditing}
                         onClick={() => onSaveEdit(entry.id)}
-                        className="flex-1 rounded-md px-3 py-2 text-sm font-semibold disabled:opacity-60"
+                        className="flex-1 rounded-[4px] px-3 py-2 text-sm font-semibold disabled:opacity-60"
                         style={{ background: 'var(--cyan)', color: '#02131a' }}
                       >
                         {isEditing ? 'Saving…' : 'Save'}
@@ -449,7 +463,7 @@ function CalendarPage() {
                         type="button"
                         disabled={isEditing}
                         onClick={cancelEdit}
-                        className="flex-1 rounded-md border px-3 py-2 text-sm font-semibold disabled:opacity-60"
+                        className="flex-1 rounded-[4px] border px-3 py-2 text-sm font-semibold disabled:opacity-60"
                         style={{ borderColor: 'var(--border)', background: 'transparent', color: 'var(--text)' }}
                       >
                         Cancel
@@ -463,8 +477,8 @@ function CalendarPage() {
                       {entry.minutes} min ({(entry.minutes / 60).toFixed(1)}h)
                     </p>
                     <span
-                      className="mt-2 inline-block rounded px-2 py-1 text-xs font-medium"
-                      style={{ background: entry.color, color: '#02131a' }}
+                      className="mt-2 inline-block rounded-[4px] px-2 py-1 text-xs font-semibold"
+                      style={{ background: 'rgba(0, 212, 255, 0.10)', color: 'var(--cyan)', border: '1px solid rgba(0, 212, 255, 0.14)' }}
                     >
                       {entry.tag}
                     </span>
@@ -473,7 +487,7 @@ function CalendarPage() {
                       <button
                         type="button"
                         onClick={() => startEdit(entry)}
-                        className="flex-1 rounded-md border px-3 py-2 text-xs font-semibold"
+                        className="flex-1 rounded-[4px] border px-3 py-2 text-xs font-semibold"
                         style={{ borderColor: 'var(--border)', background: 'transparent', color: 'var(--text)' }}
                       >
                         Edit
@@ -481,7 +495,7 @@ function CalendarPage() {
                       <button
                         type="button"
                         onClick={() => onDeleteEntry(entry.id)}
-                        className="flex-1 rounded-md border px-3 py-2 text-xs font-semibold"
+                        className="flex-1 rounded-[4px] border px-3 py-2 text-xs font-semibold"
                         style={{ borderColor: 'rgba(255, 107, 107, 0.55)', background: 'transparent', color: '#ff6b6b' }}
                       >
                         Delete
@@ -494,13 +508,13 @@ function CalendarPage() {
           )}
         </div>
 
-        <div className="mt-6 rounded-xl border p-4" style={{ borderColor: 'var(--border)' }}>
+        <div className="mt-6 rounded-[4px] border p-4" style={{ borderColor: 'var(--border)', background: 'rgba(255,255,255,0.02)' }}>
           <h4 className="m-0 text-base font-semibold">Add Entry</h4>
           <select
-            className="mt-3 w-full rounded-md border px-3 py-2 text-sm outline-none"
+            className="mt-3 w-full rounded-[4px] border px-3 py-2 text-sm outline-none"
             value={selectedAssignmentId}
             onChange={(e) => setSelectedAssignmentId(e.target.value)}
-            style={{ background: '#0f1522', borderColor: 'var(--border)', color: 'var(--text)' }}
+            style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'var(--border)', color: 'var(--text)' }}
           >
             {assignments.map((assignment) => (
               <option key={assignment.id} value={String(assignment.id)}>
@@ -510,9 +524,9 @@ function CalendarPage() {
           </select>
           <input
             type="number"
-            className="mt-2 w-full rounded-md border px-3 py-2 text-sm outline-none"
+            className="mt-2 w-full rounded-[4px] border px-3 py-2 text-sm outline-none"
             placeholder="e.g. 480 = 8h"
-            style={{ background: '#0f1522', borderColor: 'var(--border)', color: 'var(--text)' }}
+            style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'var(--border)', color: 'var(--text)' }}
             value={workedMinutes}
             onChange={(e) => setWorkedMinutes(e.target.value)}
           />
@@ -520,7 +534,7 @@ function CalendarPage() {
             type="button"
             disabled={isSaving}
             onClick={onSaveEntry}
-            className="mt-3 w-full rounded-md px-3 py-2 text-sm font-semibold"
+            className="mt-3 w-full rounded-[4px] px-3 py-2 text-sm font-semibold"
             style={{ background: 'var(--cyan)', color: '#02131a', opacity: isSaving ? 0.7 : 1 }}
           >
             {isSaving ? 'Saving…' : 'Save Entry'}

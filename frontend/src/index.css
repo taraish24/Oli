@@ -2,25 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
 :root {
-  --bg: #0f1117;
-  --card: #151820;
-  --border: #1e2433;
+  --bg: #0a0f14;
+  --card: #0f1922;
+  --border: #1a2a35;
   --cyan: #00d4ff;
-  --blue: #0066ff;
+  --blue: #00d4ff;
   --green: #00c896;
-  --orange: #ff6b35;
-  --text: #e2e8f0;
-  --muted: #8892a4;
+  --orange: #ff8a3d;
+  --text: #e6f0f7;
+  --muted: #7ea0b5;
+  --radius: 4px;
 }
 
 body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'DM Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
 #root {
   min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: rgba(0, 212, 255, 0.22);
+}
+
+input,
+select,
+button {
+  font: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid rgba(0, 212, 255, 0.6);
+  outline-offset: 2px;
 }

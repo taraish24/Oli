@@ -2,6 +2,16 @@ const express = require('express')
 const cors = require('cors')
 require('dotenv').config()
 
+if (!process.env.DATABASE_URL || !String(process.env.DATABASE_URL).trim()) {
+  console.error('FATAL: DATABASE_URL is missing or empty. Set it in .env or the environment.')
+  process.exit(1)
+}
+
+if (!process.env.JWT_SECRET || !String(process.env.JWT_SECRET).trim()) {
+  console.error('FATAL: JWT_SECRET is missing or empty. Set it in .env or the environment.')
+  process.exit(1)
+}
+
 const app = express()
 app.use(cors())
 app.use(express.json())
